@@ -26,7 +26,7 @@ from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 load_dotenv()
 
 embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
-llm=Ollama(model="llama3.2", request_timeout=120.0)
+llm=Ollama(model="gemma3", request_timeout=120.0)
 Settings.llm = llm
 Settings.embed_model = embed_model
 
@@ -71,7 +71,7 @@ async def entrypoint(ctx: JobContext):
         stt=stt_impl,
         llm=llama_index.LLM(chat_engine=chat_engine),
         tts=cartesia.TTS(
-            model="sonic-preview",
+            model="sonic-2",
             voice="794f9389-aac1-45b6-b726-9d9369183238",
         ),
         chat_ctx=chat_context,
