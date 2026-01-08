@@ -1252,17 +1252,6 @@ function AddLLMKeyModal({ isOpen, onClose, selectedProvider, onSave }: AddLLMKey
             </a>
           </div>
 
-          <div>
-            <label className="text-body-small text-black-alpha-64 mb-4 block">Label (optional)</label>
-            <input
-              type="text"
-              value={formData.label}
-              onChange={(e) => setFormData({ ...formData, label: e.target.value })}
-              placeholder="e.g., Production, Development"
-              className="w-full px-12 py-8 bg-background-base border border-border-faint rounded-8 text-body-small text-accent-black"
-            />
-          </div>
-
           <div className="p-12 bg-heat-4 border border-heat-100 rounded-8">
             <p className="text-xs text-black-alpha-64">
               <strong>Security:</strong> Your API key will be encrypted and stored securely.

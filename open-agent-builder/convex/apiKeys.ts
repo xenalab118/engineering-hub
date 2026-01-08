@@ -35,9 +35,7 @@ export const generate = mutation({
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+    const userId = identity?.subject || "anonymous";
 
     // Generate secure key
     const key = `sk_live_${generateSecureToken(32)}`;
@@ -47,7 +45,7 @@ export const generate = mutation({
     const apiKeyId = await ctx.db.insert("apiKeys", {
       key: keyHash,
       keyPrefix,
-      userId: identity.subject,
+      userId: userId,
       name: args.name,
       usageCount: 0,
       createdAt: new Date().toISOString(),
@@ -68,11 +66,11 @@ export const list = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) return [];
+    const userId = identity?.subject || "anonymous";
 
     return await ctx.db
       .query("apiKeys")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
       .filter((q) => q.eq(q.field("revokedAt"), undefined))
       .order("desc")
       .collect();
@@ -84,16 +82,14 @@ export const revoke = mutation({
   args: { id: v.id("apiKeys") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+    const userId = identity?.subject || "anonymous";
 
     const apiKey = await ctx.db.get(args.id);
     if (!apiKey) {
       throw new Error("API key not found");
     }
 
-    if (apiKey.userId !== identity.subject) {
+    if (apiKey.userId !== userId) {
       throw new Error("Unauthorized");
     }
 

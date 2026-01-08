@@ -6,7 +6,6 @@ import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   addEdge,
   useNodesState,
   useEdgesState,
@@ -1653,10 +1652,6 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
           />
           <Controls
             className="!bg-accent-white !border-border-faint"
-          />
-          <MiniMap
-            className="!bg-accent-white !border-border-faint"
-            nodeColor="#FA5D19"
           />
         </ReactFlow>
 
