@@ -38,7 +38,3 @@ lerna-debug.log*
 
 # TypeScript
 *.tsbuildinfo
-
-# Other files
-script.ts
-tool-output.txt
