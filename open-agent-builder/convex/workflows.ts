@@ -10,20 +10,24 @@ export const list = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.subject || "anonymous";
 
-    // Show user's workflows (exclude templates)
-    const workflows = await ctx.db
-      .query("workflows")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("userId"), userId),
-          q.neq(q.field("isTemplate"), true)
+    // If authenticated, only show user's workflows (exclude templates and undefined userId)
+    if (identity) {
+      const workflows = await ctx.db
+        .query("workflows")
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("userId"), identity.subject),
+            q.neq(q.field("isTemplate"), true)
+          )
         )
-      )
-      .order("desc")
-      .collect();
-    return workflows;
+        .order("desc")
+        .collect();
+      return workflows;
+    }
+
+    // If not authenticated, return empty array
+    return [];
   },
 });
 
@@ -68,7 +72,6 @@ export const saveWorkflow = mutation({
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.subject || "anonymous";
 
     // Check if workflow with this customId already exists (if customId provided)
     if (args.customId) {
@@ -78,8 +81,8 @@ export const saveWorkflow = mutation({
         .first();
 
       if (existing) {
-        // Check ownership
-        if (existing.userId && existing.userId !== userId) {
+        // Check ownership if user is authenticated
+        if (identity && existing.userId && existing.userId !== identity.subject) {
           throw new Error("Unauthorized: workflow belongs to another user");
         }
 
@@ -95,7 +98,7 @@ export const saveWorkflow = mutation({
     // Create new workflow with user ownership
     const newId = await ctx.db.insert("workflows", {
       ...args,
-      userId: userId, // Add user ownership (or "anonymous" if not authenticated)
+      userId: identity?.subject, // Add user ownership if authenticated
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -298,7 +301,11 @@ export const deleteWorkflowsWithoutUserId = mutation({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.subject || "anonymous";
+
+    // Only allow if authenticated (add admin check in production)
+    if (!identity) {
+      throw new Error("Unauthorized: must be authenticated");
+    }
 
     // Find all workflows without userId and not templates
     const workflows = await ctx.db

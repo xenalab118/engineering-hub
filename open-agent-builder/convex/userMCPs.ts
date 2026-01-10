@@ -17,14 +17,16 @@ export const add = mutation({
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.subject || "anonymous";
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
 
     // Check if MCP with this name already exists for user
     const existing = await ctx.db
       .query("userMCPs")
       .filter((q) =>
         q.and(
-          q.eq(q.field("userId"), userId),
+          q.eq(q.field("userId"), identity.subject),
           q.eq(q.field("name"), args.name)
         )
       )
@@ -43,7 +45,7 @@ export const add = mutation({
 
     // Create new
     return await ctx.db.insert("userMCPs", {
-      userId: userId,
+      userId: identity.subject,
       name: args.name,
       url: args.url,
       headers: args.headers,
@@ -59,11 +61,11 @@ export const list = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.subject || "anonymous";
+    if (!identity) return [];
 
     return await ctx.db
       .query("userMCPs")
-      .filter((q) => q.eq(q.field("userId"), userId))
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
       .order("desc")
       .collect();
   },
@@ -74,14 +76,16 @@ export const remove = mutation({
   args: { id: v.id("userMCPs") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.subject || "anonymous";
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
 
     const mcp = await ctx.db.get(args.id);
     if (!mcp) {
       throw new Error("MCP not found");
     }
 
-    if (mcp.userId !== userId) {
+    if (mcp.userId !== identity.subject) {
       throw new Error("Unauthorized");
     }
 
@@ -97,7 +101,9 @@ export const importFromCursor = mutation({
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.subject || "anonymous";
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
 
     try {
       const parsed = JSON.parse(args.config);
@@ -112,7 +118,7 @@ export const importFromCursor = mutation({
         const mcpConfig = config as any;
 
         const mcpId = await ctx.db.insert("userMCPs", {
-          userId: userId,
+          userId: identity.subject,
           name,
           url: mcpConfig.url || mcpConfig.command || '',
           headers: mcpConfig.headers,

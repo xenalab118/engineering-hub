@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect, Suspense } from "react";
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 // Import shared components
 import { Connector } from "@/components/shared/layout/curvy-rect";
@@ -79,11 +79,13 @@ function StyleGuidePageContent() {
   return (
     <HeaderProvider>
       {showWorkflowBuilder ? (
+        <SignedIn>
           <WorkflowBuilder
             onBack={handleReset}
             initialWorkflowId={loadWorkflowId}
             initialTemplateId={loadTemplateId}
           />
+        </SignedIn>
       ) : (
       <div className="min-h-screen bg-background-base">
         {/* Header/Navigation Section */}
@@ -106,6 +108,7 @@ function StyleGuidePageContent() {
               </div>
 
               <div className="flex gap-8 items-center">
+                {/* Powered by Composio Button */}
                 <a
                   href="https://composio.dev/"
                   target="_blank"
@@ -114,6 +117,26 @@ function StyleGuidePageContent() {
                 >
                   Powered by Composio
                 </a>
+
+                {/* Clerk Auth */}
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <button className="px-16 py-8 bg-[#de6f6f] hover:bg-[#d45f5f] text-white rounded-8 text-body-medium font-medium transition-all active:scale-[0.98]">
+                      Sign In
+                    </button>
+                  </SignInButton>
+                </SignedOut>
+
+                <SignedIn>
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-32 h-32",
+                      }
+                    }}
+                    afterSignOutUrl="/"
+                  />
+                </SignedIn>
               </div>
             </div>
           </HeaderWrapper>
@@ -154,11 +177,12 @@ function StyleGuidePageContent() {
                         boxShadow: '0 4px 14px 0 rgba(124, 58, 237, 0.15), 0 2px 8px 0 rgba(59, 130, 246, 0.1)'
                       }}
                     >
-                      <span className="text-gray-600">Powered by <span className="font-semibold text-[#de6f6f]">Composio's</span> self-evolving skill layer and 10k+ tools</span>
+                      <span className="text-gray-600">Powered by <span className="font-semibold text-[#de6f6f]">Composio&apos;s</span> self-evolving skill layer and 10k+ tools</span>
                     </a>
                   </div>
                 </motion.div>
               ) : (
+                <SignedIn>
                   <motion.div
                     key="step2"
                     initial={{ opacity: 0 }}
@@ -183,6 +207,7 @@ function StyleGuidePageContent() {
                       }}
                     />
                   </motion.div>
+                </SignedIn>
               )}
             </AnimatePresence>
           </div>
@@ -195,12 +220,24 @@ function StyleGuidePageContent() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
+              {/* When signed in - navigate to workflows */}
+              <SignedIn>
                 <button
                   onClick={handleSubmit}
                   className="bg-[#de6f6f] hover:bg-[#d45f5f] text-white font-medium px-24 py-10 rounded-10 transition-all active:scale-[0.98] text-body-medium shadow-md cursor-pointer"
                 >
                   Start building
                 </button>
+              </SignedIn>
+
+              {/* When signed out - open sign-in modal */}
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="bg-[#de6f6f] hover:bg-[#d45f5f] text-white font-medium px-24 py-10 rounded-10 transition-all active:scale-[0.98] text-body-medium shadow-md cursor-pointer">
+                    Start building
+                  </button>
+                </SignInButton>
+              </SignedOut>
             </motion.div>
           )}
         </section>
