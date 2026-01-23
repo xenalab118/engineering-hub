@@ -239,7 +239,7 @@ TRL provides battle-tested scripts for all methods. Can be run from URLs:
 
 ```python
 hf_jobs("uv", {
-    "script": "https://github.com/huggingface/trl/blob/main/trl/scripts/sft.py",
+    "script": "https://raw.githubusercontent.com/huggingface/trl/main/trl/scripts/sft.py",
     "script_args": [
         "--model_name_or_path", "Qwen/Qwen2.5-0.5B",
         "--dataset_name", "trl-lib/Capybara",

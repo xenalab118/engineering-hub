@@ -93,7 +93,7 @@ HF_TOKEN=$HF_TOKEN hf jobs uv run hf-evaluation/scripts/inspect_eval_uv.py \
 
 ## Resources
 
-- [SKILL.md](../../hf-evaluation/SKILL.md) — Full skill documentation
-- [Example Usage](../../hf-evaluation/examples/USAGE_EXAMPLES.md) — Worked examples
-- [Metric Mapping](../../hf-evaluation/examples/metric_mapping.json) — Standard metric types
+- [SKILL.md](../../skills/hugging-face-evaluation/SKILL.md) — Full skill documentation
+- [Example Usage](../../skills/hugging-face-evaluation/examples/USAGE_EXAMPLES.md) — Worked examples
+- [Metric Mapping](../../skills/hugging-face-evaluation/examples/metric_mapping.json) — Standard metric types
 
