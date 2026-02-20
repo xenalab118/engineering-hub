@@ -11,7 +11,7 @@ This project demonstrates how to fine-tune a **YOLO26m** checkpoint on a custom 
 - [Roboflow](https://roboflow.com/) — needed to download the dataset. Store it as `ROBOFLOW_API_KEY` in a `.env` file.
 - [Comet ML](https://www.comet.com/) — needed for experiment tracking. Store it as `api_key` in a `.comet.config` file.
 
-Refer `.env.example` and `.comet.config.example` files for the structure of the files.
+Refer to `.env.example` and `.comet.config.example` files for the structure of the files.
 
 **Install Dependencies**:
 
@@ -21,7 +21,7 @@ Ensure you have Python 3.12 or later installed.
 uv sync
 ```
 
-Select above python virtual environment as kernel in the notebook.
+Select the above python virtual environment as kernel in the notebook.
 
 **Run the notebook**:
 
