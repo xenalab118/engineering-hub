@@ -2,7 +2,9 @@
 
 13 free courses from Anthropic covering Agents, MCP, Claude Code, API, and RAG.
 
-<img src="assets/anthropic-academy-banner.png" width="700"/>
+<p align="center">
+  <img src="assets/anthropic-academy-banner.png" width="700"/>
+</p>
 
 ---
 
