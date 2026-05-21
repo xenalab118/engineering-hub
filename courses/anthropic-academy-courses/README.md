@@ -81,7 +81,7 @@ Teach and assess AI fluency in instructor-led settings.
 **🔗 [Teaching AI Fluency](https://anthropic.skilljar.com/teaching-ai-fluency)**
 
 ### 1️⃣1️⃣ AI Fluency for Nonprofits
-![AI Fluency Nonprofits](assets/ai-fluency-nonprofits.png)
+![AI Fluency Nonprofits](assets/ai-fluency-nonp-rofits.png)
 
 Practical AI skills for nonprofit professionals in fundraising, comms, programs, and ops.
 
