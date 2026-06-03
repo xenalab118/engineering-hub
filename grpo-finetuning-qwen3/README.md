@@ -49,6 +49,38 @@ Open and run `grpo_json_extraction.ipynb` end-to-end. The notebook covers:
 
 ---
 
+## Agent Skill
+
+The `agent-skill/grpo-finetune/` folder contains a reusable agent skill that wraps the full GRPO fine-tuning pipeline — from reward validation to dataset upload to training to inference — into a single runnable script.
+
+**What's included**:
+
+- `run_pipeline.py` — end-to-end pipeline: validates reward, uploads dataset, runs GRPO training, evals the fine-tuned model, and runs sample inference
+- `generate_reward.py` — validates that your `reward.py` satisfies the scoring contract before any GPU spend
+- `agent_demo.py` — runs the deployed fine-tuned model on sample invoices and prints structured extraction results
+- `SKILL.md` — skill definition for Claude Code; describes when and how to trigger the skill
+
+**Run the pipeline**:
+
+```bash
+python agent-skill/grpo-finetune/run_pipeline.py \
+    --train ./train_prompts.jsonl \
+    --eval  ./eval_prompts.jsonl \
+    --task  invoice-extraction \
+    --output-id <your-model-id>
+```
+
+**Run inference only** (if you already have a deployed model):
+
+```bash
+python agent-skill/grpo-finetune/agent_demo.py invoices.txt \
+    --deployment accounts/<account-id>/deployments/<your-model-id>
+```
+
+Sample invoices for testing are in `invoices.txt`. Replace them with your own data.
+
+---
+
 ## 📬 Stay Updated with Our Newsletter!
 
 **Get a FREE Data Science eBook** 📖 with 150+ essential lessons in Data Science when you subscribe to our newsletter! Stay in the loop with the latest tutorials, insights, and exclusive resources. [Subscribe now!](https://join.dailydoseofds.com)
