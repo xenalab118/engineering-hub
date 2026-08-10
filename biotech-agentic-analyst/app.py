@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import os
 import sys
 import tempfile
@@ -117,7 +118,7 @@ def _pill(text: str, bg: str, fg: str) -> str:
     return (
         f'<span style="background:{bg};color:{fg};padding:3px 10px;'
         f"border-radius:12px;font-size:0.8em;font-weight:500;"
-        f'margin:2px;display:inline-block">{text}</span>'
+        f'margin:2px;display:inline-block">{html.escape(text)}</span>'
     )
 
 
@@ -127,7 +128,7 @@ def _axis_pill(label: str, value: str) -> str:
         f'<span style="display:inline-flex;align-items:center;border-radius:8px;'
         f'overflow:hidden;margin:2px;font-size:0.8em;border:1px solid #4b5563">'
         f'<span style="background:#4b5563;color:#f9fafb;padding:2px 7px;font-weight:700">{label}</span>'
-        f'<span style="padding:2px 8px">&nbsp;{value}</span>'
+        f'<span style="padding:2px 8px">&nbsp;{html.escape(value)}</span>'
         f"</span>"
     )
 
@@ -200,7 +201,7 @@ def _render_figure_intelligence_tab(state: ScienceFlowState) -> None:
                 for i, ct in enumerate(chart_types[:3])
             )
             st.markdown(
-                f"{pills_html}&nbsp;&nbsp;<strong>{fi.key_finding}</strong>",
+                f"{pills_html}&nbsp;&nbsp;<strong>{html.escape(fi.key_finding)}</strong>",
                 unsafe_allow_html=True,
             )
             st.markdown("")
@@ -405,7 +406,15 @@ if analyze_button and uploaded_file is not None and client is not None:
                     f"Figure intelligence generated · {n} figures interpreted{q_str}"
                 )
                 st.write(label)
-                status_analyst.update(label=label, state="complete", expanded=False)
+                if flow.state.error:
+                    status_analyst.update(
+                        label=f"{label} (partial failures)",
+                        state="complete",
+                        expanded=True,
+                    )
+                    st.warning(flow.state.error)
+                else:
+                    status_analyst.update(label=label, state="complete", expanded=False)
                 st.session_state.pipeline_steps.append(label)
 
         st.session_state.flow_state = flow.state

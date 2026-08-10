@@ -30,7 +30,6 @@ class FigureIntelligence(BaseModel):
     biological_significance: str
     knowledge_base_tags: list[str] = Field(default_factory=list)
     is_quantitative_chart: bool = Field(
-        default=True,
         description=(
             "True only for statistical/data charts (bar, line, scatter, pie, box plot, "
             "histogram, heatmap, dose-response curve, survival curve, forest plot, etc). "
@@ -39,7 +38,6 @@ class FigureIntelligence(BaseModel):
         ),
     )
     passes_sanity_check: bool = Field(
-        default=True,
         description=(
             "True only if the image is clear/legible (not blurry, cropped, or low-res) "
             "AND its visual content matches the caption and data_summary."

@@ -3,7 +3,7 @@ name = "biotech-agentic-analyst"
 version = "0.1.0"
 description = "Agentic scientific figure intelligence workflow for the biotech domain"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "crewai[litellm]>=1.6.1",
     "mistralai>=2.8.0",

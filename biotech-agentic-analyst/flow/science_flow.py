@@ -43,6 +43,7 @@ class ScienceFlow(Flow[ScienceFlowState]):
     @listen("analyze")
     def analyze_figures(self):
         all_intelligences = []
+        failed_ids: list[str] = []
 
         # Different figure_ids can resolve to the same embedded page image
         # (OCR page-matching ambiguity). Drop the repeats before they're sent
@@ -105,8 +106,14 @@ class ScienceFlow(Flow[ScienceFlowState]):
                     f"[ScienceFlow] Skipping chunk {chunk_ids} after "
                     f"{1 + _MAX_RETRIES} attempts: {last_exc}"
                 )
+                failed_ids.extend(chunk_ids)
 
         self.state.figure_intelligences = all_intelligences
+        if failed_ids:
+            self.state.error = (
+                f"Analysis failed for {len(failed_ids)} figure(s): "
+                f"{', '.join(failed_ids)}"
+            )
         return "analyzed"
 
     @listen("abort")

@@ -198,17 +198,18 @@ def parse_pipeline_results(
             if resolved_index is not None:
                 real_index = resolved_index
             else:
-                # Model's self-reported page_number convention (0- vs.
-                # 1-based); try both.
+                # Schema asks for a 1-based page_number; prefer the 0-based
+                # conversion, falling back to the raw value in case the model
+                # didn't follow the schema convention.
                 raw_page_number = fig.get("page_number", 0)
-                candidates = [raw_page_number, raw_page_number - 1]
+                candidates = [raw_page_number - 1, raw_page_number]
                 real_index = next(
                     (
                         c
                         for c in candidates
                         if page_cursor.get(c, 0) < len(page_images.get(c, []))
                     ),
-                    raw_page_number,
+                    max(raw_page_number - 1, 0),
                 )
 
             thumb = _take_image(real_index)

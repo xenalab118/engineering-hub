@@ -42,7 +42,7 @@ On Windows (PowerShell):
 
 ```powershell
 uv sync
-.venv\Scripts\activate
+.venv\Scripts\activate.ps1
 ```
 
 ## Run the Streamlit App

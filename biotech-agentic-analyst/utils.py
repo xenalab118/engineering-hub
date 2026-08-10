@@ -15,6 +15,8 @@ def decode_thumbnail(b64_str: Optional[str]) -> Optional[Image.Image]:
         b64_str = b64_str.split(",", 1)[1]
     try:
         data = base64.b64decode(b64_str)
-        return Image.open(io.BytesIO(data))
+        img = Image.open(io.BytesIO(data))
+        img.load()
+        return img
     except Exception:
         return None
